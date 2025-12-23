@@ -5,17 +5,17 @@ app = marimo.App(width="medium")
 
 
 @app.cell
-def _():
-    import pandas as pd
-    return (pd,)
-
-
-@app.cell
 def _(pd):
     agents_df = pd.read_excel("data/agents_reworked.xlsx")
 
     agents_df
     return (agents_df,)
+
+
+@app.cell
+def _():
+    import pandas as pd
+    return (pd,)
 
 
 @app.cell
@@ -41,7 +41,6 @@ def _(get_engine):
     plt.rcParams['figure.figsize'] = (12, 6)
     plt.rcParams['figure.dpi'] = 100
     engine = get_engine()
-    conn = engine.connect()
     return engine, plt
 
 
@@ -117,6 +116,56 @@ def _(pivot_table, plt):
 
     plt.tight_layout()
     plt.show()
+    return
+
+
+@app.cell
+def _():
+    import marimo as mo
+    return (mo,)
+
+
+@app.cell
+def _(engine, mo):
+    _ = mo.sql(
+        f"""
+        INSERT INTO "Laws" ("Type", "Title", "StartDate") VALUES ('КоАП РФ', 'Дубликат', '2024-01-01');
+        """,
+        engine=engine
+    )
+    return
+
+
+@app.cell
+def _(engine, mo):
+    _df = mo.sql(
+        f"""
+        INSERT INTO "Courts" ("Name", "RegionId") VALUES ('Несуществующий суд', '99');
+        """,
+        engine=engine
+    )
+    return
+
+
+@app.cell
+def _(engine, mo):
+    _df = mo.sql(
+        f"""
+        INSERT INTO "Laws" ("Type", "Title", "StartDate") VALUES ('ТК РФ', 'Трудовой Кодекс Российской Федерации', '2002-02-01');
+        """,
+        engine=engine
+    )
+    return
+
+
+@app.cell
+def _(engine, mo):
+    _df = mo.sql(
+        f"""
+        SELECT * FROM "Laws";
+        """,
+        engine=engine
+    )
     return
 
 
